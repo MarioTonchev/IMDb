@@ -48,6 +48,8 @@ int main()
 		case 2:
 			break;
 		case 3:
+			ClearConsole();
+			PrintMovies(movies, movieCnt);
 			break;
 		case 4:
 			break;

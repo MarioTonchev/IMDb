@@ -84,3 +84,16 @@ void DeleteMovie(Movie movies[], int& movieCnt) {
 		PressAnyKeyToContinue();
 	}
 }
+
+void PrintMovies(Movie movies[], int movieCnt) {
+	cout << "All movies:" << endl << endl;
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		cout << "Title: " << movies[i].title << ", Created in: " << movies[i].year
+			<< ", Genre: " << movies[i].genre << ", Rating: " << movies[i].rating
+			<< ", Director: " << movies[i].director << ", Actors: " << movies[i].actors << endl;
+	}
+
+	PressAnyKeyToContinue();
+}

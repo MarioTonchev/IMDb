@@ -6,8 +6,8 @@
 using namespace std;
 
 void DisplayUserActions() {
-	cout << "1. Find movie by title" << endl;
-	cout << "2. Find movie by genre" << endl;
+	cout << "1. Filter movies by title" << endl;
+	cout << "2. Filter movies by genre" << endl;
 	cout << "3. View all movies" << endl;
 	cout << "4. Rate movie" << endl;
 	cout << "5. Sort movies by rating or title" << endl;
@@ -96,4 +96,60 @@ void PrintMovies(Movie movies[], int movieCnt) {
 	}
 
 	PressAnyKeyToContinue();
+}
+
+void FilterMoviesByTitle(Movie movies[], int movieCnt) {
+	ClearConsole();
+	cout << "Search for movies by title: ";
+	char title[MAX_TITLE_LENGTH];
+
+	ClearInputBuffer();
+	cin.getline(title, MAX_TITLE_LENGTH);
+
+	char* titleLowered = ConvertWordToLower(title);
+
+	Movie foundMovies[MAX_MOVIES];
+	int foundMoviesCnt = 0;
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		char* searchCriteria = titleLowered;
+		char* currTitle = ConvertWordToLower(movies[i].title);
+
+		char* currTitleCopy = currTitle;
+
+		while (*currTitleCopy != '\0')
+		{
+			if (*searchCriteria == *currTitleCopy)
+			{
+				searchCriteria++;
+
+				if (*searchCriteria == '\0')
+				{
+					foundMovies[foundMoviesCnt++] = movies[i];
+					break;
+				}
+			}
+			else
+			{
+				searchCriteria = titleLowered;
+			}
+
+			currTitleCopy++;
+		}
+
+		delete[] currTitle;
+	}
+
+	delete[] titleLowered;
+
+	if (foundMoviesCnt == 0)
+	{
+		cout << "No movies matching the title were found!" << endl;
+		PressAnyKeyToContinue();
+	}
+	else
+	{
+		PrintMovies(foundMovies, foundMoviesCnt);
+	}
 }

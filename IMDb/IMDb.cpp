@@ -44,6 +44,7 @@ int main()
 		switch (action)
 		{
 		case 1:
+			FilterMoviesByTitle(movies, movieCnt);
 			break;
 		case 2:
 			break;

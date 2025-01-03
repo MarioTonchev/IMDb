@@ -74,6 +74,7 @@ int main()
 			}
 			break;
 		case 9:
+			ChangeMovieInfo(movies, movieCnt);
 			break;
 		case 10:		
 			DeleteMovie(movies, movieCnt);

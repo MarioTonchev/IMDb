@@ -14,7 +14,6 @@ void DisplayUserActions() {
 	cout << "6. Filter movies by rating" << endl;
 	cout << "7. Quit" << endl;
 }
-
 void DisplayAdminActions() {
 	DisplayUserActions();
 
@@ -61,7 +60,6 @@ void AddMovie(Movie movies[], int& movieCnt) {
 
 	ClearConsole();
 }
-
 void DeleteMovie(Movie movies[], int& movieCnt) {
 	ClearConsole();
 	cout << "Enter title of move you wish to delete: ";
@@ -84,18 +82,92 @@ void DeleteMovie(Movie movies[], int& movieCnt) {
 		PressAnyKeyToContinue();
 	}
 }
+void ChangeMovieInfo(Movie movies[], int movieCnt) {
+	ClearConsole();
+	cout << "Enter the title of the movie you wish to edit: ";
 
-void PrintMovies(Movie movies[], int movieCnt) {
-	cout << "All movies:" << endl << endl;
+	char title[MAX_TITLE_LENGTH];
 
-	for (size_t i = 0; i < movieCnt; i++)
+	ClearInputBuffer();
+	cin.getline(title, MAX_TITLE_LENGTH);
+
+	char* titleLowered = ConvertWordToLower(title);
+
+	int movieToEditIndex = FindMovieByTitle(titleLowered, movies, movieCnt);
+
+	delete[] titleLowered;
+
+
+	if (movieToEditIndex != -1)
 	{
-		cout << "Title: " << movies[i].title << ", Created in: " << movies[i].year
-			<< ", Genre: " << movies[i].genre << ", Rating: " << movies[i].rating
-			<< ", Director: " << movies[i].director << ", Actors: " << movies[i].actors << endl;
-	}
+		Movie movieToEdit = movies[movieToEditIndex];
 
-	PressAnyKeyToContinue();
+		cout << "Editing movie... (If you don't wish to change certain fields you can skip them)" << endl;
+
+		cout << "Enter new title: ";
+		char newTitle[MAX_TITLE_LENGTH];
+		cin.getline(newTitle, MAX_TITLE_LENGTH);
+
+		if (strcmp(newTitle, "") != 0)
+		{
+			strcpy(movieToEdit.title, newTitle);
+		}
+
+		cout << "Enter new movie year of creation: ";
+		const int MAX_YEAR_LENGTH = 5;
+		char newYear[MAX_YEAR_LENGTH];
+		cin.getline(newYear, MAX_YEAR_LENGTH);
+
+		if (strcmp(newYear, "") != 0)
+		{
+			int yearInt = atoi(newYear);
+
+			while (yearInt < 0)
+			{
+				cout << "Please enter a valid (non-negative) year!" << endl;
+				cin.getline(newYear, MAX_YEAR_LENGTH);
+				yearInt = atoi(newYear);
+			}
+
+			movieToEdit.year = yearInt;
+		}
+
+		cout << "Enter new movie genre: ";
+		char newGenre[MAX_GENRE_LENGTH];
+		cin.getline(newGenre, MAX_GENRE_LENGTH);
+
+		if (strcmp(newGenre, "") != 0)
+		{
+			strcpy(movieToEdit.genre, newGenre);
+		}
+
+		cout << "Enter new movie director: ";
+		char newDirector[MAX_DIRECTOR_LENGTH];
+		cin.getline(newDirector, MAX_DIRECTOR_LENGTH);
+
+		if (strcmp(newDirector, "") != 0)
+		{
+			strcpy(movieToEdit.director, newDirector);
+		}
+
+		cout << "Enter new actors (seperated by coma): ";
+		char newActors[MAX_ACTORS_LENGTH];
+		cin.getline(newActors, MAX_ACTORS_LENGTH);
+
+		if (strcmp(newActors, "") != 0)
+		{
+			strcpy(movieToEdit.actors, newActors);
+		}
+
+		movies[movieToEditIndex] = movieToEdit;
+
+		ChangeMovieInFile(movies, movieCnt);
+	}
+	else
+	{
+		cout << "Movie with such title was not found!" << endl;
+		PressAnyKeyToContinue();
+	}
 }
 
 void FilterMoviesByTitle(Movie movies[], int movieCnt) {
@@ -153,7 +225,6 @@ void FilterMoviesByTitle(Movie movies[], int movieCnt) {
 		PrintMovies(foundMovies, foundMoviesCnt);
 	}
 }
-
 void FilterMoviesByGenre(Movie movies[], int movieCnt) {
 	ClearConsole();
 	char genre[MAX_GENRE_LENGTH];
@@ -190,4 +261,17 @@ void FilterMoviesByGenre(Movie movies[], int movieCnt) {
 	{
 		PrintMovies(foundMovies, foundMoviesCnt);
 	}
+}
+
+void PrintMovies(Movie movies[], int movieCnt) {
+	cout << "All movies:" << endl << endl;
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		cout << "Title: " << movies[i].title << ", Created in: " << movies[i].year
+			<< ", Genre: " << movies[i].genre << ", Rating: " << movies[i].rating
+			<< ", Director: " << movies[i].director << ", Actors: " << movies[i].actors << endl;
+	}
+
+	PressAnyKeyToContinue();
 }

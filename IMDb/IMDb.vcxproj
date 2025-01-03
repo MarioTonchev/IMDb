@@ -127,7 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="HelperFunctions.cpp" />
     <ClCompile Include="IMDb.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core.h" />
+    <ClInclude Include="HelperFunctions.h" />
+    <ClInclude Include="Movie.h" />
+    <ClInclude Include="MovieConstants.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

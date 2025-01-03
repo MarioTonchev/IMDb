@@ -61,3 +61,26 @@ void AddMovie(Movie movies[], int& movieCnt) {
 
 	ClearConsole();
 }
+
+void DeleteMovie(Movie movies[], int& movieCnt) {
+	ClearConsole();
+	cout << "Enter title of move you wish to delete: ";
+	char title[MAX_TITLE_LENGTH];
+
+	ClearInputBuffer();
+	cin.getline(title, MAX_TITLE_LENGTH);
+
+	char* titleLowered = ConvertWordToLower(title);
+	int index = FindMovieByTitle(titleLowered, movies, movieCnt);
+
+	if (index != -1)
+	{
+		RemoveMovieFromFile(index);
+		DeleteMovieFromArray(movies, movieCnt, index);
+	}
+	else
+	{
+		cout << "Movie does not exist!" << endl;
+		PressAnyKeyToContinue();
+	}
+}

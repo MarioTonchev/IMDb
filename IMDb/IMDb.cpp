@@ -71,7 +71,8 @@ int main()
 			break;
 		case 9:
 			break;
-		case 10:			
+		case 10:		
+			DeleteMovie(movies, movieCnt);
 			break;
 		default:
 			ClearConsole();

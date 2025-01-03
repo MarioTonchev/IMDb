@@ -120,6 +120,15 @@ void RemoveMovieFromFile(int index) {
 	remove(MOVIES_FILE);
 	rename(TEMP_MOVIES_FILE, MOVIES_FILE);
 }
+void ChangeMovieInFile(Movie movies[], int movieCnt) {
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		SaveMovieToFile(movies[i], TEMP_MOVIES_FILE);
+	}
+
+	remove(MOVIES_FILE);
+	rename(TEMP_MOVIES_FILE, MOVIES_FILE);
+}
 
 void DeleteMovieFromArray(Movie movies[], int& movieCount, int index) {
 	for (size_t i = index; i < movieCount; i++)

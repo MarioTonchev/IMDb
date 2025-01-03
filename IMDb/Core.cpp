@@ -24,3 +24,40 @@ void DisplayAdminActions() {
 	cout << "9. Change movie info" << endl;
 	cout << "10. Delete movie" << endl;
 }
+
+void AddMovie(Movie movies[], int& movieCnt) {
+	ClearConsole();
+	ClearInputBuffer();
+
+	Movie newMovie;
+
+	cout << "Adding movie..." << endl;
+
+	cout << "Enter movie title: ";
+	cin.getline(newMovie.title, MAX_TITLE_LENGTH);
+
+	cout << "Enter movie year of creation: ";
+	cin >> newMovie.year;
+
+	while (newMovie.year < 0)
+	{
+		cout << "Please enter a valid (non-negative) year!" << endl;
+		cin >> newMovie.year;
+	}
+
+	ClearInputBuffer();
+
+	cout << "Enter movie genre: ";
+	cin.getline(newMovie.genre, MAX_TITLE_LENGTH);
+
+	cout << "Enter movie director: ";
+	cin.getline(newMovie.director, MAX_TITLE_LENGTH);
+
+	cout << "Enter actors (seperated by coma): ";
+	cin.getline(newMovie.actors, MAX_ACTORS_LENGTH);
+
+	movies[movieCnt++] = newMovie;
+	SaveMovieToFile(newMovie, MOVIES_FILE);
+
+	ClearConsole();
+}

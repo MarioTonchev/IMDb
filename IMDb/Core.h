@@ -9,3 +9,4 @@ void DeleteMovie(Movie movies[], int& movieCount);
 void PrintMovies(Movie movies[], int movieCnt);
 
 void FilterMoviesByTitle(Movie movies[], int movieCnt);
+void FilterMoviesByGenre(Movie movies[], int movieCnt);

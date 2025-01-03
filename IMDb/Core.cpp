@@ -153,3 +153,41 @@ void FilterMoviesByTitle(Movie movies[], int movieCnt) {
 		PrintMovies(foundMovies, foundMoviesCnt);
 	}
 }
+
+void FilterMoviesByGenre(Movie movies[], int movieCnt) {
+	ClearConsole();
+	char genre[MAX_GENRE_LENGTH];
+	cout << "Please enter genre: ";
+
+	ClearInputBuffer();
+	cin.getline(genre, MAX_GENRE_LENGTH);
+
+	char* genreLowered = ConvertWordToLower(genre);
+
+	Movie foundMovies[MAX_MOVIES];
+	int foundMoviesCnt = 0;
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		char* currGenreLowered = ConvertWordToLower(movies[i].genre);
+
+		if (strcmp(currGenreLowered, genreLowered) == 0)
+		{
+			foundMovies[foundMoviesCnt++] = movies[i];
+		}
+
+		delete[] currGenreLowered;
+	}
+
+	delete[] genreLowered;
+
+	if (foundMoviesCnt == 0)
+	{
+		cout << "No movies matching the genre were found!" << endl;
+		PressAnyKeyToContinue();
+	}
+	else
+	{
+		PrintMovies(foundMovies, foundMoviesCnt);
+	}
+}

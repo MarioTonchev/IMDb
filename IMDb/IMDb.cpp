@@ -47,6 +47,7 @@ int main()
 			FilterMoviesByTitle(movies, movieCnt);
 			break;
 		case 2:
+			FilterMoviesByGenre(movies, movieCnt);
 			break;
 		case 3:
 			ClearConsole();

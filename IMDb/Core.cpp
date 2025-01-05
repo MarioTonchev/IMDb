@@ -325,3 +325,38 @@ void RateMovie(Movie movies[], int movieCnt) {
 		PressAnyKeyToContinue();
 	}
 }
+void FilterMoviesByRating(Movie movies[], int movieCnt) {
+	ClearConsole();
+	cout << "Please enter minimum required rating: ";
+
+	double minRating;
+	cin >> minRating;
+
+	while (minRating < 1 || minRating > 10)
+	{
+		cout << "Rating must be between 1 and 10!" << endl;
+
+		cin >> minRating;
+	}
+
+	Movie* filteredMovies = new Movie[movieCnt];
+	int filteredMoviesCnt = 0;
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		if (movies[i].averageRating >= minRating)
+		{
+			filteredMovies[filteredMoviesCnt++] = movies[i];
+		}
+	}
+
+	if (filteredMoviesCnt == 0)
+	{
+		cout << "No movies with rating greater than " << minRating << " were found!" << endl;
+		PressAnyKeyToContinue();
+	}
+	else
+	{
+		PrintMovies(filteredMovies, filteredMoviesCnt);
+	}
+}

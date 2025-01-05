@@ -59,6 +59,7 @@ int main()
 		case 5:
 			break;
 		case 6:
+			FilterMoviesByRating(movies, movieCnt);
 			break;
 		case 7:
 			return 0;

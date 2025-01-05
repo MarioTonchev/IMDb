@@ -12,3 +12,4 @@ void FilterMoviesByTitle(Movie movies[], int movieCnt);
 void FilterMoviesByGenre(Movie movies[], int movieCnt);
 
 void RateMovie(Movie movies[], int movieCnt);
+void FilterMoviesByRating(Movie movies[], int movieCnt);

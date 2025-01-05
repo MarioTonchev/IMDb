@@ -27,12 +27,21 @@ void SaveMovieToFile(Movie movie, const char* fileName) {
 		return;
 	}
 
+	char* ratingsAsString = ConvertIntArrToStrArr(movie.ratings, movie.ratingsCnt);
+
 	outputFile << movie.title << "|"
 		<< movie.year << "|"
 		<< movie.genre << "|"
-		<< movie.rating << "|"
 		<< movie.director << "|"
-		<< movie.actors << "\n";
+		<< movie.actors << "|"
+		<< movie.averageRating << "|"
+		<< movie.ratingsCnt << "|"
+		<< ratingsAsString << "\n";
+
+	if (movie.ratingsCnt > 0)
+	{
+		delete[] ratingsAsString;
+	}
 
 	outputFile.close();
 }
@@ -71,12 +80,6 @@ void ReadMoviesFromFile(Movie movies[], int& movieCount) {
 		token = strtok(nullptr, "|");
 		if (token)
 		{
-			movie.rating = atof(token);
-		}
-
-		token = strtok(nullptr, "|");
-		if (token)
-		{
 			strcpy(movie.director, token);
 		}
 
@@ -84,6 +87,24 @@ void ReadMoviesFromFile(Movie movies[], int& movieCount) {
 		if (token)
 		{
 			strcpy(movie.actors, token);
+		}
+
+		token = strtok(nullptr, "|");
+		if (token)
+		{
+			movie.averageRating = atof(token);
+		}
+
+		token = strtok(nullptr, "|");
+		if (token)
+		{
+			movie.ratingsCnt = atoi(token);
+		}
+
+		token = strtok(nullptr, "|");
+		if (token)
+		{
+			GetRatings(token, movie);
 		}
 
 		movies[movieCount++] = movie;
@@ -198,4 +219,69 @@ void PressAnyKeyToContinue() {
 	cout << "Press any key to continue...";
 	_getch();
 	cout << endl;
+}
+
+double CalculateAverageRating(Movie movie) {
+	double result = 0;
+
+	for (size_t i = 0; i < movie.ratingsCnt; i++)
+	{
+		result += movie.ratings[i];
+	}
+
+	result /= movie.ratingsCnt;
+
+	return result;
+}
+char* ConvertIntArrToStrArr(int arr[], int size) {
+	int tensCount = 0;
+	for (size_t i = 0; i < size; i++)
+	{
+		if (arr[i] == 10)
+		{
+			tensCount++;
+		}
+	}
+
+	char* result = new char[size * 2 + tensCount + 1];
+	int resultCnt = 0;
+
+	const int DIFFERENCE_BETWEEN_CHAR_INT = 48;
+
+	for (size_t i = 0; i < size; i++)
+	{
+		if (arr[i] != 10)
+		{
+			result[resultCnt] = arr[i] + DIFFERENCE_BETWEEN_CHAR_INT;
+			result[resultCnt + 1] = ' ';
+			resultCnt += 2;
+		}
+		else
+		{
+			result[resultCnt] = '1';
+			result[resultCnt + 1] = '0';
+			result[resultCnt + 2] = ' ';
+			resultCnt += 3;
+		}
+	}
+
+	result[size * 2 + tensCount] = '\0';
+
+	return result;
+}
+void GetRatings(char* str, Movie& movie) {
+	int cnt = 0;
+
+	for (size_t i = 0; i < movie.ratingsCnt * 2; i += 2)
+	{
+		if (str[i] == '1' && str[i + 1] == '0')
+		{
+			movie.ratings[cnt++] = 10;
+			i++;
+		}
+		else
+		{
+			movie.ratings[cnt++] = str[i] - '0';
+		}
+	}
 }

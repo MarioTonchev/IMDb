@@ -16,3 +16,7 @@ bool IsLetter(char symbol);
 char* ConvertWordToLower(char* word);
 
 void PressAnyKeyToContinue();
+
+double CalculateAverageRating(Movie movie);
+char* ConvertIntArrToStrArr(int arr[], int size);
+void GetRatings(char* str, Movie& movie);

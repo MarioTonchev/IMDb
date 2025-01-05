@@ -8,5 +8,7 @@ struct Movie {
 	char director[MAX_DIRECTOR_LENGTH];
 	char actors[MAX_ACTORS_LENGTH];
 
-	double rating = 5;
+	int ratings[MAX_RATINGS_LENGTH];
+	int ratingsCnt = 0;
+	double averageRating = 5;
 };

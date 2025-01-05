@@ -54,6 +54,7 @@ int main()
 			PrintMovies(movies, movieCnt);
 			break;
 		case 4:
+			RateMovie(movies, movieCnt);
 			break;
 		case 5:
 			break;

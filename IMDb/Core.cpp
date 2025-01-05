@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "HelperFunctions.h"
 
 using namespace std;
@@ -29,7 +30,8 @@ void PrintMovies(Movie movies[], int movieCnt) {
 	for (size_t i = 0; i < movieCnt; i++)
 	{
 		cout << "Title: " << movies[i].title << ", Created in: " << movies[i].year
-			<< ", Genre: " << movies[i].genre << ", Rating: " << movies[i].rating
+			<< ", Genre: " << movies[i].genre 
+			<< ", Rating: " << fixed << setprecision(2) << movies[i].averageRating
 			<< ", Director: " << movies[i].director << ", Actors: " << movies[i].actors << endl;
 	}
 
@@ -64,7 +66,7 @@ void AddMovie(Movie movies[], int& movieCnt) {
 	cout << "Enter movie director: ";
 	cin.getline(newMovie.director, MAX_TITLE_LENGTH);
 
-	cout << "Enter actors (seperated by coma): ";
+	cout << "Enter actors (separated by coma): ";
 	cin.getline(newMovie.actors, MAX_ACTORS_LENGTH);
 
 	movies[movieCnt++] = newMovie;
@@ -272,5 +274,54 @@ void FilterMoviesByGenre(Movie movies[], int movieCnt) {
 	else
 	{
 		PrintMovies(foundMovies, foundMoviesCnt);
+	}
+}
+
+void RateMovie(Movie movies[], int movieCnt) {
+	ClearConsole();
+	cout << "Please enter the title of the movie you wish to rate: ";
+
+	ClearInputBuffer();
+
+	char title[MAX_TITLE_LENGTH];
+	cin.getline(title, MAX_TITLE_LENGTH);
+
+	char* loweredTitle = ConvertWordToLower(title);
+
+	int index = FindMovieByTitle(loweredTitle, movies, movieCnt);
+
+	delete[] loweredTitle;
+
+	if (index != -1)
+	{
+		cout << "Please enter a rating between 1 and 10: ";
+
+		double rating;
+		cin >> rating;
+
+		while (rating < 1 || rating > 10)
+		{
+			cout << "Rating must be between 1 and 10!" << endl;
+
+			cin >> rating;
+		}
+
+		Movie movie = movies[index];
+
+		movie.ratings[movie.ratingsCnt++] = rating;
+
+		movie.averageRating = CalculateAverageRating(movie);
+
+		movies[index] = movie;
+
+		ChangeMovieInFile(movies, movieCnt);
+
+		cout << "Rating successfully added!" << endl;
+		PressAnyKeyToContinue();
+	}
+	else
+	{
+		cout << "Movie does not exist!" << endl;
+		PressAnyKeyToContinue();
 	}
 }

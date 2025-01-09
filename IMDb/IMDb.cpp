@@ -57,6 +57,21 @@ int main()
 			RateMovie(movies, movieCnt);
 			break;
 		case 5:
+			ClearConsole();
+			cout << "Select how do you want movies to be sorted:" << endl;
+			cout << "1. By Title (In Ascending Order)" << endl;
+			cout << "2. By Rating (In Ascending Order)" << endl;
+			int choice;
+			cin >> choice;
+
+			if (choice == 1)
+			{
+				SortMoviesByTitle(movies, movieCnt);
+			}
+			else if (choice == 2)
+			{
+				SortMoviesByRating(movies, movieCnt);
+			}
 			break;
 		case 6:
 			FilterMoviesByRating(movies, movieCnt);

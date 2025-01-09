@@ -285,3 +285,90 @@ void GetRatings(char* str, Movie& movie) {
 		}
 	}
 }
+
+int StrCmp(char* str1, char* str2) {
+	char* str1Lower = ConvertWordToLower(str1);
+	char* str2Lower = ConvertWordToLower(str2);
+
+	while (*str1Lower != '\0' && *str2Lower != '\0')
+	{
+		if (*str1Lower > *str2Lower)
+		{
+			delete[] str1Lower;
+			delete[] str2Lower;
+			return 1;
+		}
+		else if (*str1Lower < *str2Lower)
+		{
+			delete[] str1Lower;
+			delete[] str2Lower;
+			return -1;
+		}
+
+		str1Lower++;
+		str2Lower++;
+	}
+
+	if (*str1Lower == '\0')
+	{
+		delete[] str1Lower;
+		delete[] str2Lower;
+		return -1;
+	}
+	else if (*str2Lower == '\0')
+	{
+		delete[] str1Lower;
+		delete[] str2Lower;
+		return 1;
+	}
+
+	delete[] str1Lower;
+	delete[] str2Lower;
+	return 0;
+}
+Movie* SortByTitle(Movie movies[], int movieCnt) {
+	Movie* sortedMovies = new Movie[movieCnt];
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		sortedMovies[i] = movies[i];
+	}
+
+	for (size_t i = 0; i < movieCnt - 1; i++)
+	{
+		for (size_t j = 0; j < movieCnt - i - 1; j++)
+		{
+			if (StrCmp(sortedMovies[j].title, sortedMovies[j + 1].title) > 0)
+			{
+				Movie temp = sortedMovies[j + 1];
+				sortedMovies[j + 1]  = sortedMovies[j];
+				sortedMovies[j] = temp;
+			}
+		}
+	}
+
+	return sortedMovies;
+}
+Movie* SortByRating(Movie movies[], int movieCnt) {
+	Movie* sortedMovies = new Movie[movieCnt];
+
+	for (size_t i = 0; i < movieCnt; i++)
+	{
+		sortedMovies[i] = movies[i];
+	}
+
+	for (size_t i = 0; i < movieCnt - 1; i++)
+	{
+		for (size_t j = 0; j < movieCnt - i - 1; j++)
+		{
+			if (sortedMovies[j].averageRating > sortedMovies[j + 1].averageRating)
+			{
+				Movie temp = sortedMovies[j + 1];
+				sortedMovies[j + 1] = sortedMovies[j];
+				sortedMovies[j] = temp;
+			}
+		}
+	}
+
+	return sortedMovies;
+}

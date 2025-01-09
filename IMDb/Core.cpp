@@ -294,6 +294,13 @@ void RateMovie(Movie movies[], int movieCnt) {
 
 	if (index != -1)
 	{
+		Movie movie = movies[index];
+
+		if (movie.ratingsCnt == MAX_RATINGS_LENGTH)
+		{
+			cout << "Movie has reached maximum amounts of ratings!" << endl;
+		}
+
 		cout << "Please enter a rating between 1 and 10: ";
 
 		double rating;
@@ -305,8 +312,6 @@ void RateMovie(Movie movies[], int movieCnt) {
 
 			cin >> rating;
 		}
-
-		Movie movie = movies[index];
 
 		movie.ratings[movie.ratingsCnt++] = rating;
 
@@ -359,4 +364,19 @@ void FilterMoviesByRating(Movie movies[], int movieCnt) {
 	{
 		PrintMovies(filteredMovies, filteredMoviesCnt);
 	}
+}
+
+void SortMoviesByTitle(Movie movies[], int movieCnt) {
+	ClearConsole();
+	Movie* sortedMovies = SortByTitle(movies, movieCnt);
+	cout << "(Sorted by title) ";
+	PrintMovies(sortedMovies, movieCnt);
+	delete[] sortedMovies;
+}
+void SortMoviesByRating(Movie movies[], int movieCnt) {
+	ClearConsole();
+	Movie* sortedMovies = SortByRating(movies, movieCnt);
+	cout << "(Sorted by rating) ";
+	PrintMovies(sortedMovies, movieCnt);
+	delete[] sortedMovies;
 }

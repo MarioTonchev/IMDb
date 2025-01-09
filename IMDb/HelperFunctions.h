@@ -20,3 +20,7 @@ void PressAnyKeyToContinue();
 double CalculateAverageRating(Movie movie);
 char* ConvertIntArrToStrArr(int arr[], int size);
 void GetRatings(char* str, Movie& movie);
+
+int StrCmp(char* str1, char* str2);
+Movie* SortByTitle(Movie movies[], int movieCnt);
+Movie* SortByRating(Movie movies[], int movieCnt);

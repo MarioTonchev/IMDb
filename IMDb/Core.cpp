@@ -380,3 +380,133 @@ void SortMoviesByRating(Movie movies[], int movieCnt) {
 	PrintMovies(sortedMovies, movieCnt);
 	delete[] sortedMovies;
 }
+
+void RunApp(Movie movies[], int movieCnt, int role) {
+	while (true)
+	{
+		ClearConsole();
+		cout << "Choose one of the following actions:" << endl << endl;
+
+		if (role == 1)
+		{
+			DisplayUserActions();
+		}
+		else if (role == 2)
+		{
+			DisplayAdminActions();
+		}
+
+		int action;
+		cin >> action;
+
+		if (role == 1)
+		{
+			switch (action)
+			{
+			case 1:
+				FilterMoviesByTitle(movies, movieCnt);
+				break;
+			case 2:
+				FilterMoviesByGenre(movies, movieCnt);
+				break;
+			case 3:
+				ClearConsole();
+				PrintMovies(movies, movieCnt);
+				break;
+			case 4:
+				RateMovie(movies, movieCnt);
+				break;
+			case 5:
+				ClearConsole();
+				cout << "Select how do you want movies to be sorted:" << endl;
+				cout << "1. By Title (In Ascending Order)" << endl;
+				cout << "2. By Rating (In Ascending Order)" << endl;
+				int choice;
+				cin >> choice;
+
+				if (choice == 1)
+				{
+					SortMoviesByTitle(movies, movieCnt);
+				}
+				else if (choice == 2)
+				{
+					SortMoviesByRating(movies, movieCnt);
+				}
+				break;
+			case 6:
+				FilterMoviesByRating(movies, movieCnt);
+				break;
+			case 7:
+				return;
+				break;
+			default:
+				ClearConsole();
+				continue;
+				break;
+			}
+		}		
+		else if (role == 2)
+		{
+			switch (action)
+			{
+			case 1:
+				FilterMoviesByTitle(movies, movieCnt);
+				break;
+			case 2:
+				FilterMoviesByGenre(movies, movieCnt);
+				break;
+			case 3:
+				ClearConsole();
+				PrintMovies(movies, movieCnt);
+				break;
+			case 4:
+				RateMovie(movies, movieCnt);
+				break;
+			case 5:
+				ClearConsole();
+				cout << "Select how do you want movies to be sorted:" << endl;
+				cout << "1. By Title (In Ascending Order)" << endl;
+				cout << "2. By Rating (In Ascending Order)" << endl;
+				int choice;
+				cin >> choice;
+
+				if (choice == 1)
+				{
+					SortMoviesByTitle(movies, movieCnt);
+				}
+				else if (choice == 2)
+				{
+					SortMoviesByRating(movies, movieCnt);
+				}
+				break;
+			case 6:
+				FilterMoviesByRating(movies, movieCnt);
+				break;
+			case 7:
+				return;
+				break;
+			case 8:
+				if (movieCnt + 1 <= MAX_MOVIES)
+				{
+					AddMovie(movies, movieCnt);
+				}
+				else
+				{
+					cout << "Maximum movie count reached!" << endl;
+					PressAnyKeyToContinue();
+				}
+				break;
+			case 9:
+				ChangeMovieInfo(movies, movieCnt);
+				break;
+			case 10:
+				DeleteMovie(movies, movieCnt);
+				break;
+			default:
+				ClearConsole();
+				continue;
+				break;
+			}
+		}		
+	}
+}

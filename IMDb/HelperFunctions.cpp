@@ -11,7 +11,6 @@ void ClearConsole() {
 	cout << "\033[;H";
 	cout << "\033[J";
 }
-
 void ClearInputBuffer() {
 	cin.clear();
 	cin.sync();

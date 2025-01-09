@@ -2,27 +2,28 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <conio.h>
 #include "HelperFunctions.h"
 
 using namespace std;
 
 void DisplayUserActions() {
-	cout << "1. Filter movies by title" << endl;
-	cout << "2. Filter movies by genre" << endl;
-	cout << "3. View all movies" << endl;
-	cout << "4. Rate movie" << endl;
-	cout << "5. Sort movies by rating or title" << endl;
-	cout << "6. Filter movies by rating" << endl;
-	cout << "7. Quit" << endl;
+	cout << "0. Filter movies by title" << endl;
+	cout << "1. Filter movies by genre" << endl;
+	cout << "2. View all movies" << endl;
+	cout << "3. Rate movie" << endl;
+	cout << "4. Sort movies by rating or title" << endl;
+	cout << "5. Filter movies by rating" << endl;
+	cout << "6. Quit" << endl;
 }
 void DisplayAdminActions() {
 	DisplayUserActions();
 
 	cout << endl;
 
-	cout << "8. Add movie" << endl;
-	cout << "9. Change movie info" << endl;
-	cout << "10. Delete movie" << endl;
+	cout << "7. Add movie" << endl;
+	cout << "8. Change movie info" << endl;
+	cout << "9. Delete movie" << endl;
 }
 void PrintMovies(Movie movies[], int movieCnt) {
 	cout << "All movies:" << endl << endl;
@@ -40,7 +41,6 @@ void PrintMovies(Movie movies[], int movieCnt) {
 
 void AddMovie(Movie movies[], int& movieCnt) {
 	ClearConsole();
-	ClearInputBuffer();
 
 	Movie newMovie;
 
@@ -79,7 +79,6 @@ void DeleteMovie(Movie movies[], int& movieCnt) {
 	cout << "Enter title of move you wish to delete: ";
 	char title[MAX_TITLE_LENGTH];
 
-	ClearInputBuffer();
 	cin.getline(title, MAX_TITLE_LENGTH);
 
 	char* titleLowered = ConvertWordToLower(title);
@@ -102,7 +101,6 @@ void ChangeMovieInfo(Movie movies[], int movieCnt) {
 
 	char title[MAX_TITLE_LENGTH];
 
-	ClearInputBuffer();
 	cin.getline(title, MAX_TITLE_LENGTH);
 
 	char* titleLowered = ConvertWordToLower(title);
@@ -189,7 +187,6 @@ void FilterMoviesByTitle(Movie movies[], int movieCnt) {
 	cout << "Search for movies by title: ";
 	char title[MAX_TITLE_LENGTH];
 
-	ClearInputBuffer();
 	cin.getline(title, MAX_TITLE_LENGTH);
 
 	char* titleLowered = ConvertWordToLower(title);
@@ -244,7 +241,6 @@ void FilterMoviesByGenre(Movie movies[], int movieCnt) {
 	char genre[MAX_GENRE_LENGTH];
 	cout << "Please enter genre: ";
 
-	ClearInputBuffer();
 	cin.getline(genre, MAX_GENRE_LENGTH);
 
 	char* genreLowered = ConvertWordToLower(genre);
@@ -281,8 +277,6 @@ void RateMovie(Movie movies[], int movieCnt) {
 	ClearConsole();
 	cout << "Please enter the title of the movie you wish to rate: ";
 
-	ClearInputBuffer();
-
 	char title[MAX_TITLE_LENGTH];
 	cin.getline(title, MAX_TITLE_LENGTH);
 
@@ -305,6 +299,8 @@ void RateMovie(Movie movies[], int movieCnt) {
 
 		double rating;
 		cin >> rating;
+
+		ClearInputBuffer();
 
 		while (rating < 1 || rating > 10)
 		{
@@ -381,62 +377,61 @@ void SortMoviesByRating(Movie movies[], int movieCnt) {
 	delete[] sortedMovies;
 }
 
-void RunApp(Movie movies[], int movieCnt, int role) {
+void RunApp(Movie movies[], int movieCnt, char role) {
 	while (true)
 	{
 		ClearConsole();
 		cout << "Choose one of the following actions:" << endl << endl;
 
-		if (role == 1)
+		if (role == '1')
 		{
 			DisplayUserActions();
 		}
-		else if (role == 2)
+		else if (role == '2')
 		{
 			DisplayAdminActions();
 		}
 
-		int action;
-		cin >> action;
+		char action = _getch();
 
-		if (role == 1)
+		if (role == '1')
 		{
 			switch (action)
 			{
-			case 1:
+			case '0':
 				FilterMoviesByTitle(movies, movieCnt);
 				break;
-			case 2:
+			case '1':
 				FilterMoviesByGenre(movies, movieCnt);
 				break;
-			case 3:
+			case '2':
 				ClearConsole();
 				PrintMovies(movies, movieCnt);
 				break;
-			case 4:
+			case '3':
 				RateMovie(movies, movieCnt);
 				break;
-			case 5:
+			case '4': {
 				ClearConsole();
 				cout << "Select how do you want movies to be sorted:" << endl;
 				cout << "1. By Title (In Ascending Order)" << endl;
 				cout << "2. By Rating (In Ascending Order)" << endl;
-				int choice;
-				cin >> choice;
+				char choice = _getch();
 
-				if (choice == 1)
+				if (choice == '1')
 				{
 					SortMoviesByTitle(movies, movieCnt);
 				}
-				else if (choice == 2)
+				else if (choice == '2')
 				{
 					SortMoviesByRating(movies, movieCnt);
 				}
 				break;
-			case 6:
+			}
+			case '5':
 				FilterMoviesByRating(movies, movieCnt);
 				break;
-			case 7:
+			case '6':
 				return;
 				break;
 			default:
@@ -445,24 +440,24 @@ void RunApp(Movie movies[], int movieCnt, int role) {
 				break;
 			}
 		}		
-		else if (role == 2)
+		else if (role == '2')
 		{
 			switch (action)
 			{
-			case 1:
+			case '0':
 				FilterMoviesByTitle(movies, movieCnt);
 				break;
-			case 2:
+			case '1':
 				FilterMoviesByGenre(movies, movieCnt);
 				break;
-			case 3:
+			case '2':
 				ClearConsole();
 				PrintMovies(movies, movieCnt);
 				break;
-			case 4:
+			case '3':
 				RateMovie(movies, movieCnt);
 				break;
-			case 5:
+			case '4':
 				ClearConsole();
 				cout << "Select how do you want movies to be sorted:" << endl;
 				cout << "1. By Title (In Ascending Order)" << endl;
@@ -479,13 +474,13 @@ void RunApp(Movie movies[], int movieCnt, int role) {
 					SortMoviesByRating(movies, movieCnt);
 				}
 				break;
-			case 6:
+			case '5':
 				FilterMoviesByRating(movies, movieCnt);
 				break;
-			case 7:
+			case '6':
 				return;
 				break;
-			case 8:
+			case '7':
 				if (movieCnt + 1 <= MAX_MOVIES)
 				{
 					AddMovie(movies, movieCnt);
@@ -496,10 +491,10 @@ void RunApp(Movie movies[], int movieCnt, int role) {
 					PressAnyKeyToContinue();
 				}
 				break;
-			case 9:
+			case '8':
 				ChangeMovieInfo(movies, movieCnt);
 				break;
-			case 10:
+			case '9':
 				DeleteMovie(movies, movieCnt);
 				break;
 			default:

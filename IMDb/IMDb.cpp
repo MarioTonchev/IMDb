@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 #include "HelperFunctions.h"
 #include "Core.h"
 
@@ -10,18 +11,15 @@ int main()
 	int movieCnt = 0;
 
 	ReadMoviesFromFile(movies, movieCnt);
-
+		
 	cout << "Welcome to IMDb - the world's best place for everything movie related!" << endl << endl;
 	cout << "Please choose your role (type 1 or 2):" << endl << "1. User" << endl << "2. Administrator" << endl;
+	char role = _getch();
 
-	int role;
-	cin >> role;
-	ClearInputBuffer();
-
-	while (role != 1 && role != 2)
+	while (role != '1' && role != '2')
 	{
 		cout << "Please enter 1 or 2 in order to choose your role!" << endl;
-		cin >> role;
+		role = _getch();
 	}
 
 	RunApp(movies, movieCnt, role);

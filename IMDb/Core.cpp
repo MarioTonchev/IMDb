@@ -1,8 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <conio.h>
 #include "HelperFunctions.h"
 
 using namespace std;
@@ -31,7 +29,7 @@ void PrintMovies(Movie movies[], int movieCnt) {
 	for (size_t i = 0; i < movieCnt; i++)
 	{
 		cout << "Title: " << movies[i].title << ", Created in: " << movies[i].year
-			<< ", Genre: " << movies[i].genre 
+			<< ", Genre: " << movies[i].genre
 			<< ", Rating: " << fixed << setprecision(2) << movies[i].averageRating
 			<< ", Director: " << movies[i].director << ", Actors: " << movies[i].actors << endl;
 	}
@@ -49,13 +47,42 @@ void AddMovie(Movie movies[], int& movieCnt) {
 	cout << "Enter movie title: ";
 	cin.getline(newMovie.title, MAX_TITLE_LENGTH);
 
-	cout << "Enter movie year of creation: ";
-	cin >> newMovie.year;
-
-	while (newMovie.year < 0)
+	while (*newMovie.title == '\0')
 	{
-		cout << "Please enter a valid (non-negative) year!" << endl;
+		cout << "Please enter a non-empty movie title: ";
+		cin.getline(newMovie.title, MAX_TITLE_LENGTH);
+	}
+
+	if (FindMovieByTitle(newMovie.title, movies, movieCnt) != -1)
+	{
+		cout << "There is already a movie with such title!";
+		PressAnyKeyToContinue();
+		return;
+	}
+
+	cout << "Enter movie year of creation (1888 - 2030): ";
+
+	while (true)
+	{
 		cin >> newMovie.year;
+
+		if (cin.fail())
+		{
+			cout << "Invalid input. Please enter a numeric value between 1888 and 2030." << endl;
+			cin.clear();
+			cin.ignore(100, '\n');
+		}
+		else
+		{
+			if (newMovie.year < 1888|| newMovie.year > 2030)
+			{
+				cout << "Invalid input. Please enter a numeric value between 1888 and 2030." << endl;
+			}
+			else
+			{
+				break;
+			}
+		}
 	}
 
 	ClearInputBuffer();
@@ -81,8 +108,7 @@ void DeleteMovie(Movie movies[], int& movieCnt) {
 
 	cin.getline(title, MAX_TITLE_LENGTH);
 
-	char* titleLowered = ConvertWordToLower(title);
-	int index = FindMovieByTitle(titleLowered, movies, movieCnt);
+	int index = FindMovieByTitle(title, movies, movieCnt);
 
 	if (index != -1)
 	{
@@ -103,12 +129,7 @@ void ChangeMovieInfo(Movie movies[], int movieCnt) {
 
 	cin.getline(title, MAX_TITLE_LENGTH);
 
-	char* titleLowered = ConvertWordToLower(title);
-
-	int movieToEditIndex = FindMovieByTitle(titleLowered, movies, movieCnt);
-
-	delete[] titleLowered;
-
+	int movieToEditIndex = FindMovieByTitle(title, movies, movieCnt);
 
 	if (movieToEditIndex != -1)
 	{
@@ -120,55 +141,77 @@ void ChangeMovieInfo(Movie movies[], int movieCnt) {
 		char newTitle[MAX_TITLE_LENGTH];
 		cin.getline(newTitle, MAX_TITLE_LENGTH);
 
-		if (strcmp(newTitle, "") != 0)
+		if (*newTitle != '\0')
 		{
-			strcpy(movieToEdit.title, newTitle);
+			StringCopy(movieToEdit.title, newTitle);
+		}
+
+		if (FindMovieByTitle(newTitle, movies, movieCnt) != -1)
+		{
+			cout << "There is already a movie with such title!";
+			PressAnyKeyToContinue();
+			return;
 		}
 
 		cout << "Enter new movie year of creation: ";
 		const int MAX_YEAR_LENGTH = 5;
 		char newYear[MAX_YEAR_LENGTH];
+
 		cin.getline(newYear, MAX_YEAR_LENGTH);
 
-		if (strcmp(newYear, "") != 0)
+		if (*newYear != '\0')
 		{
-			int yearInt = atoi(newYear);
-
-			while (yearInt < 0)
+			while (true)
 			{
-				cout << "Please enter a valid (non-negative) year!" << endl;
-				cin.getline(newYear, MAX_YEAR_LENGTH);
-				yearInt = atoi(newYear);
-			}
+				int newYearInt = StrToInt(newYear);
 
-			movieToEdit.year = yearInt;
+				if (newYearInt == 0)
+				{
+					cout << "Invalid input. Please enter a numeric value between 1888 and 2030." << endl;
+				}
+				else
+				{
+					if (newYearInt < 1888 || newYearInt > 2030)
+					{
+						cout << "Invalid input. Please enter a numeric value between 1888 and 2030." << endl;
+					}
+					else
+					{
+						movieToEdit.year = newYearInt;
+						break;
+					}
+				}
+
+				cin.ignore();
+				cin.getline(newYear, MAX_YEAR_LENGTH);
+			}
 		}
 
 		cout << "Enter new movie genre: ";
 		char newGenre[MAX_GENRE_LENGTH];
 		cin.getline(newGenre, MAX_GENRE_LENGTH);
 
-		if (strcmp(newGenre, "") != 0)
+		if (*newGenre != '\0')
 		{
-			strcpy(movieToEdit.genre, newGenre);
+			StringCopy(movieToEdit.genre, newGenre);
 		}
 
 		cout << "Enter new movie director: ";
 		char newDirector[MAX_DIRECTOR_LENGTH];
 		cin.getline(newDirector, MAX_DIRECTOR_LENGTH);
 
-		if (strcmp(newDirector, "") != 0)
+		if (*newDirector != '\0')
 		{
-			strcpy(movieToEdit.director, newDirector);
+			StringCopy(movieToEdit.director, newDirector);
 		}
 
 		cout << "Enter new actors (seperated by coma): ";
 		char newActors[MAX_ACTORS_LENGTH];
 		cin.getline(newActors, MAX_ACTORS_LENGTH);
 
-		if (strcmp(newActors, "") != 0)
+		if (*newActors != '\0')
 		{
-			strcpy(movieToEdit.actors, newActors);
+			StringCopy(movieToEdit.actors, newActors);
 		}
 
 		movies[movieToEditIndex] = movieToEdit;
@@ -243,24 +286,16 @@ void FilterMoviesByGenre(Movie movies[], int movieCnt) {
 
 	cin.getline(genre, MAX_GENRE_LENGTH);
 
-	char* genreLowered = ConvertWordToLower(genre);
-
 	Movie foundMovies[MAX_MOVIES];
 	int foundMoviesCnt = 0;
 
 	for (size_t i = 0; i < movieCnt; i++)
 	{
-		char* currGenreLowered = ConvertWordToLower(movies[i].genre);
-
-		if (strcmp(currGenreLowered, genreLowered) == 0)
+		if (StrCmp(movies[i].genre, genre) == 0)
 		{
 			foundMovies[foundMoviesCnt++] = movies[i];
 		}
-
-		delete[] currGenreLowered;
 	}
-
-	delete[] genreLowered;
 
 	if (foundMoviesCnt == 0)
 	{
@@ -280,11 +315,7 @@ void RateMovie(Movie movies[], int movieCnt) {
 	char title[MAX_TITLE_LENGTH];
 	cin.getline(title, MAX_TITLE_LENGTH);
 
-	char* loweredTitle = ConvertWordToLower(title);
-
-	int index = FindMovieByTitle(loweredTitle, movies, movieCnt);
-
-	delete[] loweredTitle;
+	int index = FindMovieByTitle(title, movies, movieCnt);
 
 	if (index != -1)
 	{
@@ -293,21 +324,37 @@ void RateMovie(Movie movies[], int movieCnt) {
 		if (movie.ratingsCnt == MAX_RATINGS_LENGTH)
 		{
 			cout << "Movie has reached maximum amounts of ratings!" << endl;
+			return;
 		}
 
 		cout << "Please enter a rating between 1 and 10: ";
 
 		double rating;
-		cin >> rating;
+
+		while (true)
+		{
+			cin >> rating;
+
+			if (cin.fail())
+			{
+				cout << "Invalid input. Please enter a numeric value between 1 and 10." << endl;
+				cin.clear();
+				cin.ignore(100, '\n');
+			}
+			else
+			{
+				if (rating < 1 || rating > 10)
+				{
+					cout << "Invalid input. Please enter a numeric value between 1 and 10." << endl;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
 
 		ClearInputBuffer();
-
-		while (rating < 1 || rating > 10)
-		{
-			cout << "Rating must be between 1 and 10!" << endl;
-
-			cin >> rating;
-		}
 
 		movie.ratings[movie.ratingsCnt++] = rating;
 
@@ -331,13 +378,28 @@ void FilterMoviesByRating(Movie movies[], int movieCnt) {
 	cout << "Please enter minimum required rating: ";
 
 	double minRating;
-	cin >> minRating;
 
-	while (minRating < 1 || minRating > 10)
+	while (true)
 	{
-		cout << "Rating must be between 1 and 10!" << endl;
-
 		cin >> minRating;
+
+		if (cin.fail())
+		{
+			cout << "Invalid input. Please enter a numeric value between 1 and 10." << endl;
+			cin.clear();	
+			cin.ignore(100,'\n');
+		}
+		else
+		{
+			if (minRating < 1 || minRating > 10)
+			{
+				cout << "Invalid input. Please enter a numeric value between 1 and 10." << endl;
+			}
+			else
+			{
+				break;
+			}
+		}	
 	}
 
 	Movie* filteredMovies = new Movie[movieCnt];
@@ -377,61 +439,81 @@ void SortMoviesByRating(Movie movies[], int movieCnt) {
 	delete[] sortedMovies;
 }
 
-void RunApp(Movie movies[], int movieCnt, char role) {
+void RunApp(Movie movies[], int movieCnt, int role) {
 	while (true)
 	{
 		ClearConsole();
 		cout << "Choose one of the following actions:" << endl << endl;
 
-		if (role == '1')
+		if (role == 1)
 		{
 			DisplayUserActions();
 		}
-		else if (role == '2')
+		else if (role == 2)
 		{
 			DisplayAdminActions();
 		}
 
-		char action = _getch();
+		int action;
 
-		if (role == '1')
+		while (true)
+		{
+			cin >> action;
+
+			if (cin.fail())
+			{
+				cout << "Invalid input. Please enter a numeric value." << endl;
+				cin.clear();
+				cin.ignore(100, '\n');
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		ClearInputBuffer();
+
+		if (role == 1)
 		{
 			switch (action)
 			{
-			case '0':
+			case 0:
 				FilterMoviesByTitle(movies, movieCnt);
 				break;
-			case '1':
+			case 1:
 				FilterMoviesByGenre(movies, movieCnt);
 				break;
-			case '2':
+			case 2:
 				ClearConsole();
 				PrintMovies(movies, movieCnt);
 				break;
-			case '3':
+			case 3:
 				RateMovie(movies, movieCnt);
 				break;
-			case '4': {
+			case 4: {
 				ClearConsole();
 				cout << "Select how do you want movies to be sorted:" << endl;
 				cout << "1. By Title (In Ascending Order)" << endl;
 				cout << "2. By Rating (In Ascending Order)" << endl;
-				char choice = _getch();
 
-				if (choice == '1')
+				int choice;
+				cin >> choice;
+
+				if (choice == 1)
 				{
 					SortMoviesByTitle(movies, movieCnt);
 				}
-				else if (choice == '2')
+				else if (choice == 2)
 				{
 					SortMoviesByRating(movies, movieCnt);
 				}
 				break;
 			}
-			case '5':
+			case 5:
 				FilterMoviesByRating(movies, movieCnt);
 				break;
-			case '6':
+			case 6:
 				return;
 				break;
 			default:
@@ -439,25 +521,25 @@ void RunApp(Movie movies[], int movieCnt, char role) {
 				continue;
 				break;
 			}
-		}		
-		else if (role == '2')
+		}
+		else if (role == 2)
 		{
 			switch (action)
 			{
-			case '0':
+			case 0:
 				FilterMoviesByTitle(movies, movieCnt);
 				break;
-			case '1':
+			case 1:
 				FilterMoviesByGenre(movies, movieCnt);
 				break;
-			case '2':
+			case 2:
 				ClearConsole();
 				PrintMovies(movies, movieCnt);
 				break;
-			case '3':
+			case 3:
 				RateMovie(movies, movieCnt);
 				break;
-			case '4':
+			case 4:
 				ClearConsole();
 				cout << "Select how do you want movies to be sorted:" << endl;
 				cout << "1. By Title (In Ascending Order)" << endl;
@@ -474,13 +556,13 @@ void RunApp(Movie movies[], int movieCnt, char role) {
 					SortMoviesByRating(movies, movieCnt);
 				}
 				break;
-			case '5':
+			case 5:
 				FilterMoviesByRating(movies, movieCnt);
 				break;
-			case '6':
+			case 6:
 				return;
 				break;
-			case '7':
+			case 7:
 				if (movieCnt + 1 <= MAX_MOVIES)
 				{
 					AddMovie(movies, movieCnt);
@@ -491,10 +573,10 @@ void RunApp(Movie movies[], int movieCnt, char role) {
 					PressAnyKeyToContinue();
 				}
 				break;
-			case '8':
+			case 8:
 				ChangeMovieInfo(movies, movieCnt);
 				break;
-			case '9':
+			case 9:
 				DeleteMovie(movies, movieCnt);
 				break;
 			default:
@@ -502,6 +584,6 @@ void RunApp(Movie movies[], int movieCnt, char role) {
 				continue;
 				break;
 			}
-		}		
+		}
 	}
 }

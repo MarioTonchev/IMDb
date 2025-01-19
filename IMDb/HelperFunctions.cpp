@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
 #include <conio.h>
@@ -15,6 +14,157 @@ void ClearInputBuffer() {
 	cin.clear();
 	cin.sync();
 	cin.ignore();
+}
+
+int StrToInt(char* str) {
+	if (str == nullptr)
+	{
+		return 0;
+	}
+
+	int result = 0;
+	int sign = 1;
+	int i = 0;
+
+	while (str[i] == ' ')
+	{
+		i++;
+	}
+
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+	{
+		i++;
+	}
+
+	while (str[i] != '\0' && IsDigit(str[i]))
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+
+	return result * sign;
+}
+double StrToDouble(char* str) {
+	if (str == nullptr) {
+		return 0.0;
+	}
+
+	double result = 0.0;
+	int sign = 1;
+	int i = 0;
+	double fractionalPart = 0.0;
+	double divisor = 1.0;
+
+	while (str[i] == ' ')
+	{
+		i++;
+	}
+
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+	{
+		i++;
+	}
+
+	while (str[i] != '\0' && IsDigit(str[i]))
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+
+	if (str[i] == '.')
+	{
+		i++;
+
+		while (str[i] != '\0' && IsDigit(str[i])) {
+			fractionalPart = fractionalPart * 10 + (str[i] - '0');
+			divisor *= 10;
+			i++;
+		}
+	}
+
+	result += fractionalPart / divisor;
+
+	return result * sign;
+}
+
+void StringCopy(char* destination, char* source) {
+	if (source == "")
+	{
+		return;
+	}
+
+	int destinationCnt = 0;
+
+	while (*source != '\0')
+	{
+		destination[destinationCnt++] = *source;
+		source++;
+	}
+
+	destination[destinationCnt] = '\0';
+}
+char* FindCharInString(const char* str, char ch) {
+	while (*str != '\0') 
+	{
+		if (*str == ch) 
+		{
+			return (char*)str; 
+		}
+		str++;
+	}
+	
+	if (ch == '\0')
+	{
+		return (char*)str; 
+	}
+
+	return nullptr; 
+}
+char* StrTok(char* str, const char* delimiters) {
+	static char* nextToken = nullptr;
+
+	if (str != nullptr) {
+		nextToken = str;
+	}
+
+	if (nextToken == nullptr) {
+		return nullptr;
+	}
+
+	char* tokenStart = nextToken;
+	while (*tokenStart && FindCharInString(delimiters, *tokenStart)) {
+		++tokenStart;
+	}
+
+	if (*tokenStart == '\0') {
+		nextToken = nullptr;
+		return nullptr;
+	}
+
+	char* tokenEnd = tokenStart;
+	while (*tokenEnd && !FindCharInString(delimiters, *tokenEnd)) {
+		++tokenEnd;
+	}
+
+	if (*tokenEnd != '\0') {
+		*tokenEnd = '\0';
+		nextToken = tokenEnd + 1;
+	}	
+	else {
+		nextToken = nullptr;
+	}
+
+	return tokenStart;
 }
 
 void SaveMovieToFile(Movie movie, const char* fileName) {
@@ -58,49 +208,49 @@ void ReadMoviesFromFile(Movie movies[], int& movieCount) {
 	while (inputFile.getline(buffer, sizeof(buffer))) {
 		Movie movie;
 
-		char* token = strtok(buffer, "|");
+		char* token = StrTok(buffer, "|");
 		if (token)
 		{
-			strcpy(movie.title, token);
+			StringCopy(movie.title, token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
-			movie.year = atoi(token);
+			movie.year = StrToInt(token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
-			strcpy(movie.genre, token);
+			StringCopy(movie.genre, token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
-			strcpy(movie.director, token);
+			StringCopy(movie.director, token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
-			strcpy(movie.actors, token);
+			StringCopy(movie.actors, token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
-			movie.averageRating = atof(token);
+			movie.averageRating = StrToDouble(token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
-			movie.ratingsCnt = atoi(token);
+			movie.ratingsCnt = StrToInt(token);
 		}
 
-		token = strtok(nullptr, "|");
+		token = StrTok(nullptr, "|");
 		if (token)
 		{
 			GetRatings(token, movie);
@@ -163,17 +313,11 @@ void DeleteMovieFromArray(Movie movies[], int& movieCount, int index) {
 int FindMovieByTitle(char* title, Movie movies[], int movieCount) {
 	for (size_t i = 0; i < movieCount; i++)
 	{
-		char* movieTitleLowered = ConvertWordToLower(movies[i].title);
-
-		if (strcmp(movieTitleLowered, title) == 0)
+		if (StrCmp(movies[i].title, title) == 0)
 		{
-			delete[] movieTitleLowered;
 			return i;
 		}
-
-		delete[] movieTitleLowered;
 	}
-
 	return -1;
 }
 
@@ -212,6 +356,14 @@ char* ConvertWordToLower(char* word) {
 
 	return result;
 }
+bool IsDigit(char symbol) {
+	if (symbol >= '0' && symbol <= '9')
+	{
+		return true;
+	}
+
+	return false;
+}
 
 void PressAnyKeyToContinue() {
 	cout << endl;
@@ -220,7 +372,8 @@ void PressAnyKeyToContinue() {
 	cout << endl;
 }
 
-double CalculateAverageRating(Movie movie) {
+double CalculateAverageRating(Movie movie)
+{
 	double result = 0;
 
 	for (size_t i = 0; i < movie.ratingsCnt; i++)
@@ -289,41 +442,58 @@ int StrCmp(char* str1, char* str2) {
 	char* str1Lower = ConvertWordToLower(str1);
 	char* str2Lower = ConvertWordToLower(str2);
 
+	if (!str1Lower || !str2Lower)
+	{
+		if (str1Lower)
+		{
+			delete[] str1Lower;
+		}
+		if (str2Lower)
+		{
+			delete[] str2Lower;
+		}
+		return 0;
+	}
+
+	char* str1LowerCopy = str1Lower;
+	char* str2LowerCopy = str2Lower;
+
 	while (*str1Lower != '\0' && *str2Lower != '\0')
 	{
 		if (*str1Lower > *str2Lower)
 		{
-			delete[] str1Lower;
-			delete[] str2Lower;
+			delete[] str1LowerCopy;
+			delete[] str2LowerCopy;
 			return 1;
 		}
 		else if (*str1Lower < *str2Lower)
 		{
-			delete[] str1Lower;
-			delete[] str2Lower;
+			delete[] str1LowerCopy;
+			delete[] str2LowerCopy;
 			return -1;
 		}
-
 		str1Lower++;
 		str2Lower++;
 	}
 
-	if (*str1Lower == '\0')
+	if (*str1Lower == '\0' && *str2Lower == '\0')
 	{
-		delete[] str1Lower;
-		delete[] str2Lower;
+		delete[] str1LowerCopy;
+		delete[] str2LowerCopy;
+		return 0;
+	}
+	else if (*str1Lower == '\0')
+	{
+		delete[] str1LowerCopy;
+		delete[] str2LowerCopy;
 		return -1;
 	}
-	else if (*str2Lower == '\0')
+	else
 	{
-		delete[] str1Lower;
-		delete[] str2Lower;
+		delete[] str1LowerCopy;
+		delete[] str2LowerCopy;
 		return 1;
 	}
-
-	delete[] str1Lower;
-	delete[] str2Lower;
-	return 0;
 }
 Movie* SortByTitle(Movie movies[], int movieCnt) {
 	Movie* sortedMovies = new Movie[movieCnt];
@@ -340,7 +510,7 @@ Movie* SortByTitle(Movie movies[], int movieCnt) {
 			if (StrCmp(sortedMovies[j].title, sortedMovies[j + 1].title) > 0)
 			{
 				Movie temp = sortedMovies[j + 1];
-				sortedMovies[j + 1]  = sortedMovies[j];
+				sortedMovies[j + 1] = sortedMovies[j];
 				sortedMovies[j] = temp;
 			}
 		}

@@ -17,4 +17,4 @@ void FilterMoviesByRating(Movie movies[], int movieCnt);
 void SortMoviesByTitle(Movie movies[], int movieCnt);
 void SortMoviesByRating(Movie movies[], int movieCnt);
 
-void RunApp(Movie movies[], int movieCnt, char role);
+void RunApp(Movie movies[], int movieCnt, int role);

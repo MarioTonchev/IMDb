@@ -5,7 +5,8 @@
 
 using namespace std;
 
-void DisplayUserActions() {
+void DisplayUserActions()
+{
 	cout << "0. Filter movies by title" << endl;
 	cout << "1. Filter movies by genre" << endl;
 	cout << "2. View all movies" << endl;
@@ -14,7 +15,8 @@ void DisplayUserActions() {
 	cout << "5. Filter movies by rating" << endl;
 	cout << "6. Quit" << endl;
 }
-void DisplayAdminActions() {
+void DisplayAdminActions()
+{
 	DisplayUserActions();
 
 	cout << endl;
@@ -23,7 +25,8 @@ void DisplayAdminActions() {
 	cout << "8. Change movie info" << endl;
 	cout << "9. Delete movie" << endl;
 }
-void PrintMovies(Movie movies[], int movieCnt) {
+void PrintMovies(Movie movies[], int movieCnt)
+{
 	cout << "All movies:" << endl << endl;
 
 	for (size_t i = 0; i < movieCnt; i++)
@@ -37,7 +40,8 @@ void PrintMovies(Movie movies[], int movieCnt) {
 	PressAnyKeyToContinue();
 }
 
-void AddMovie(Movie movies[], int& movieCnt) {
+void AddMovie(Movie movies[], int& movieCnt)
+{
 	ClearConsole();
 
 	Movie newMovie;
@@ -74,7 +78,7 @@ void AddMovie(Movie movies[], int& movieCnt) {
 		}
 		else
 		{
-			if (newMovie.year < 1888|| newMovie.year > 2030)
+			if (newMovie.year < 1888 || newMovie.year > 2030)
 			{
 				cout << "Invalid input. Please enter a numeric value between 1888 and 2030." << endl;
 			}
@@ -101,7 +105,8 @@ void AddMovie(Movie movies[], int& movieCnt) {
 
 	ClearConsole();
 }
-void DeleteMovie(Movie movies[], int& movieCnt) {
+void DeleteMovie(Movie movies[], int& movieCnt)
+{
 	ClearConsole();
 	cout << "Enter title of move you wish to delete: ";
 	char title[MAX_TITLE_LENGTH];
@@ -121,7 +126,8 @@ void DeleteMovie(Movie movies[], int& movieCnt) {
 		PressAnyKeyToContinue();
 	}
 }
-void ChangeMovieInfo(Movie movies[], int movieCnt) {
+void ChangeMovieInfo(Movie movies[], int movieCnt)
+{
 	ClearConsole();
 	cout << "Enter the title of the movie you wish to edit: ";
 
@@ -225,7 +231,8 @@ void ChangeMovieInfo(Movie movies[], int movieCnt) {
 	}
 }
 
-void FilterMoviesByTitle(Movie movies[], int movieCnt) {
+void FilterMoviesByTitle(Movie movies[], int movieCnt)
+{
 	ClearConsole();
 	cout << "Search for movies by title: ";
 	char title[MAX_TITLE_LENGTH];
@@ -279,7 +286,8 @@ void FilterMoviesByTitle(Movie movies[], int movieCnt) {
 		PrintMovies(foundMovies, foundMoviesCnt);
 	}
 }
-void FilterMoviesByGenre(Movie movies[], int movieCnt) {
+void FilterMoviesByGenre(Movie movies[], int movieCnt)
+{
 	ClearConsole();
 	char genre[MAX_GENRE_LENGTH];
 	cout << "Please enter genre: ";
@@ -308,7 +316,8 @@ void FilterMoviesByGenre(Movie movies[], int movieCnt) {
 	}
 }
 
-void RateMovie(Movie movies[], int movieCnt) {
+void RateMovie(Movie movies[], int movieCnt)
+{
 	ClearConsole();
 	cout << "Please enter the title of the movie you wish to rate: ";
 
@@ -373,7 +382,8 @@ void RateMovie(Movie movies[], int movieCnt) {
 		PressAnyKeyToContinue();
 	}
 }
-void FilterMoviesByRating(Movie movies[], int movieCnt) {
+void FilterMoviesByRating(Movie movies[], int movieCnt)
+{
 	ClearConsole();
 	cout << "Please enter minimum required rating: ";
 
@@ -386,8 +396,8 @@ void FilterMoviesByRating(Movie movies[], int movieCnt) {
 		if (cin.fail())
 		{
 			cout << "Invalid input. Please enter a numeric value between 1 and 10." << endl;
-			cin.clear();	
-			cin.ignore(100,'\n');
+			cin.clear();
+			cin.ignore(100, '\n');
 		}
 		else
 		{
@@ -399,7 +409,7 @@ void FilterMoviesByRating(Movie movies[], int movieCnt) {
 			{
 				break;
 			}
-		}	
+		}
 	}
 
 	Movie* filteredMovies = new Movie[movieCnt];
@@ -424,22 +434,31 @@ void FilterMoviesByRating(Movie movies[], int movieCnt) {
 	}
 }
 
-void SortMoviesByTitle(Movie movies[], int movieCnt) {
+void SortMoviesByTitle(Movie movies[], int movieCnt)
+{
 	ClearConsole();
+
 	Movie* sortedMovies = SortByTitle(movies, movieCnt);
+
 	cout << "(Sorted by title) ";
 	PrintMovies(sortedMovies, movieCnt);
+
 	delete[] sortedMovies;
 }
-void SortMoviesByRating(Movie movies[], int movieCnt) {
+void SortMoviesByRating(Movie movies[], int movieCnt)
+{
 	ClearConsole();
+
 	Movie* sortedMovies = SortByRating(movies, movieCnt);
+
 	cout << "(Sorted by rating) ";
 	PrintMovies(sortedMovies, movieCnt);
+
 	delete[] sortedMovies;
 }
 
-void RunApp(Movie movies[], int movieCnt, int role) {
+void RunApp(Movie movies[], int movieCnt, int role)
+{
 	while (true)
 	{
 		ClearConsole();

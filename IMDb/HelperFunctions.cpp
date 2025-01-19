@@ -6,17 +6,20 @@
 
 using namespace std;
 
-void ClearConsole() {
+void ClearConsole()
+{
 	cout << "\033[;H";
 	cout << "\033[J";
 }
-void ClearInputBuffer() {
+void ClearInputBuffer()
+{
 	cin.clear();
 	cin.sync();
 	cin.ignore();
 }
 
-int StrToInt(char* str) {
+int StrToInt(char* str)
+{
 	if (str == nullptr)
 	{
 		return 0;
@@ -49,8 +52,10 @@ int StrToInt(char* str) {
 
 	return result * sign;
 }
-double StrToDouble(char* str) {
-	if (str == nullptr) {
+double StrToDouble(char* str)
+{
+	if (str == nullptr)
+	{
 		return 0.0;
 	}
 
@@ -97,7 +102,8 @@ double StrToDouble(char* str) {
 	return result * sign;
 }
 
-void StringCopy(char* destination, char* source) {
+void StringCopy(char* destination, char* source)
+{
 	if (source == "")
 	{
 		return;
@@ -113,61 +119,71 @@ void StringCopy(char* destination, char* source) {
 
 	destination[destinationCnt] = '\0';
 }
-char* FindCharInString(const char* str, char ch) {
-	while (*str != '\0') 
+char* FindCharInString(const char* str, char ch)
+{
+	while (*str != '\0')
 	{
-		if (*str == ch) 
+		if (*str == ch)
 		{
-			return (char*)str; 
+			return (char*)str;
 		}
 		str++;
 	}
-	
+
 	if (ch == '\0')
 	{
-		return (char*)str; 
+		return (char*)str;
 	}
 
-	return nullptr; 
+	return nullptr;
 }
-char* StrTok(char* str, const char* delimiters) {
+char* StrTok(char* str, const char* delimiters)
+{
 	static char* nextToken = nullptr;
 
-	if (str != nullptr) {
+	if (str != nullptr)
+	{
 		nextToken = str;
 	}
 
-	if (nextToken == nullptr) {
+	if (nextToken == nullptr)
+	{
 		return nullptr;
 	}
 
 	char* tokenStart = nextToken;
-	while (*tokenStart && FindCharInString(delimiters, *tokenStart)) {
+	while (*tokenStart && FindCharInString(delimiters, *tokenStart))
+	{
 		++tokenStart;
 	}
 
-	if (*tokenStart == '\0') {
+	if (*tokenStart == '\0')
+	{
 		nextToken = nullptr;
 		return nullptr;
 	}
 
 	char* tokenEnd = tokenStart;
-	while (*tokenEnd && !FindCharInString(delimiters, *tokenEnd)) {
+	while (*tokenEnd && !FindCharInString(delimiters, *tokenEnd))
+	{
 		++tokenEnd;
 	}
 
-	if (*tokenEnd != '\0') {
+	if (*tokenEnd != '\0')
+	{
 		*tokenEnd = '\0';
 		nextToken = tokenEnd + 1;
-	}	
-	else {
+	}
+	else
+	{
 		nextToken = nullptr;
 	}
 
 	return tokenStart;
 }
 
-void SaveMovieToFile(Movie movie, const char* fileName) {
+void SaveMovieToFile(Movie movie, const char* fileName)
+{
 	ofstream outputFile(fileName, ios::app);
 
 	if (!outputFile)
@@ -194,7 +210,8 @@ void SaveMovieToFile(Movie movie, const char* fileName) {
 
 	outputFile.close();
 }
-void ReadMoviesFromFile(Movie movies[], int& movieCount) {
+void ReadMoviesFromFile(Movie movies[], int& movieCount)
+{
 	ifstream inputFile(MOVIES_FILE);
 
 	if (!inputFile)
@@ -205,7 +222,8 @@ void ReadMoviesFromFile(Movie movies[], int& movieCount) {
 
 	char buffer[MAX_BUFFER_LENGHT];
 
-	while (inputFile.getline(buffer, sizeof(buffer))) {
+	while (inputFile.getline(buffer, sizeof(buffer)))
+	{
 		Movie movie;
 
 		char* token = StrTok(buffer, "|");
@@ -261,7 +279,8 @@ void ReadMoviesFromFile(Movie movies[], int& movieCount) {
 
 	inputFile.close();
 }
-void RemoveMovieFromFile(int index) {
+void RemoveMovieFromFile(int index)
+{
 	ifstream inputFile(MOVIES_FILE);
 	ofstream tempFile(TEMP_MOVIES_FILE);
 
@@ -290,7 +309,8 @@ void RemoveMovieFromFile(int index) {
 	remove(MOVIES_FILE);
 	rename(TEMP_MOVIES_FILE, MOVIES_FILE);
 }
-void ChangeMovieInFile(Movie movies[], int movieCnt) {
+void ChangeMovieInFile(Movie movies[], int movieCnt)
+{
 	for (size_t i = 0; i < movieCnt; i++)
 	{
 		SaveMovieToFile(movies[i], TEMP_MOVIES_FILE);
@@ -300,7 +320,8 @@ void ChangeMovieInFile(Movie movies[], int movieCnt) {
 	rename(TEMP_MOVIES_FILE, MOVIES_FILE);
 }
 
-void DeleteMovieFromArray(Movie movies[], int& movieCount, int index) {
+void DeleteMovieFromArray(Movie movies[], int& movieCount, int index)
+{
 	for (size_t i = index; i < movieCount; i++)
 	{
 		Movie nextMovie = movies[i + 1];
@@ -310,7 +331,8 @@ void DeleteMovieFromArray(Movie movies[], int& movieCount, int index) {
 
 	movieCount--;
 }
-int FindMovieByTitle(char* title, Movie movies[], int movieCount) {
+int FindMovieByTitle(char* title, Movie movies[], int movieCount)
+{
 	for (size_t i = 0; i < movieCount; i++)
 	{
 		if (StrCmp(movies[i].title, title) == 0)
@@ -321,7 +343,8 @@ int FindMovieByTitle(char* title, Movie movies[], int movieCount) {
 	return -1;
 }
 
-bool IsLetter(char symbol) {
+bool IsLetter(char symbol)
+{
 	if ((symbol >= 'a' && symbol <= 'z') || (symbol >= 'A' && symbol <= 'Z'))
 	{
 		return true;
@@ -329,7 +352,8 @@ bool IsLetter(char symbol) {
 
 	return false;
 }
-char* ConvertWordToLower(char* word) {
+char* ConvertWordToLower(char* word)
+{
 	const int LETTER_DIFFERENCE = 'a' - 'A';
 
 	char* result = new char[MAX_GENRE_LENGTH];
@@ -356,7 +380,8 @@ char* ConvertWordToLower(char* word) {
 
 	return result;
 }
-bool IsDigit(char symbol) {
+bool IsDigit(char symbol)
+{
 	if (symbol >= '0' && symbol <= '9')
 	{
 		return true;
@@ -365,7 +390,8 @@ bool IsDigit(char symbol) {
 	return false;
 }
 
-void PressAnyKeyToContinue() {
+void PressAnyKeyToContinue()
+{
 	cout << endl;
 	cout << "Press any key to continue...";
 	_getch();
@@ -385,7 +411,8 @@ double CalculateAverageRating(Movie movie)
 
 	return result;
 }
-char* ConvertIntArrToStrArr(int arr[], int size) {
+char* ConvertIntArrToStrArr(int arr[], int size)
+{
 	int tensCount = 0;
 	for (size_t i = 0; i < size; i++)
 	{
@@ -421,7 +448,8 @@ char* ConvertIntArrToStrArr(int arr[], int size) {
 
 	return result;
 }
-void GetRatings(char* str, Movie& movie) {
+void GetRatings(char* str, Movie& movie)
+{
 	int cnt = 0;
 
 	for (size_t i = 0; i < movie.ratingsCnt * 2; i += 2)
@@ -438,7 +466,8 @@ void GetRatings(char* str, Movie& movie) {
 	}
 }
 
-int StrCmp(char* str1, char* str2) {
+int StrCmp(char* str1, char* str2)
+{
 	char* str1Lower = ConvertWordToLower(str1);
 	char* str2Lower = ConvertWordToLower(str2);
 
@@ -495,7 +524,8 @@ int StrCmp(char* str1, char* str2) {
 		return 1;
 	}
 }
-Movie* SortByTitle(Movie movies[], int movieCnt) {
+Movie* SortByTitle(Movie movies[], int movieCnt)
+{
 	Movie* sortedMovies = new Movie[movieCnt];
 
 	for (size_t i = 0; i < movieCnt; i++)
@@ -518,7 +548,8 @@ Movie* SortByTitle(Movie movies[], int movieCnt) {
 
 	return sortedMovies;
 }
-Movie* SortByRating(Movie movies[], int movieCnt) {
+Movie* SortByRating(Movie movies[], int movieCnt)
+{
 	Movie* sortedMovies = new Movie[movieCnt];
 
 	for (size_t i = 0; i < movieCnt; i++)

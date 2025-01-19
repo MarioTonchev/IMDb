@@ -1,3 +1,17 @@
+/*
+*
+* Solution to course project # 6
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2023/2024
+*
+* @author Mario Tonchev
+* @idnumber 0MI0600460
+* @compiler VC
+*
+* <File with main method and where the app starts>
+*
+*/
 #include <iostream>
 #include "HelperFunctions.h"
 #include "Core.h"

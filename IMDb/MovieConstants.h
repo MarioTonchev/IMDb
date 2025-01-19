@@ -1,3 +1,17 @@
+/*
+*
+* Solution to course project # 6
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2023/2024
+*
+* @author Mario Tonchev
+* @idnumber 0MI0600460
+* @compiler VC
+*
+* <File with constants for the movie struct>
+*
+*/
 #pragma once
 
 const int MAX_TITLE_LENGTH = 100;

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iomanip>
 #include "HelperFunctions.h"
+#include "Core.h"
 
 using namespace std;
 
@@ -160,7 +161,7 @@ void ChangeMovieInfo(Movie movies[], int movieCnt)
 		}
 
 		cout << "Enter new movie year of creation: ";
-		const int MAX_YEAR_LENGTH = 5;
+		const int MAX_YEAR_LENGTH = 100;
 		char newYear[MAX_YEAR_LENGTH];
 
 		cin.getline(newYear, MAX_YEAR_LENGTH);
@@ -188,8 +189,8 @@ void ChangeMovieInfo(Movie movies[], int movieCnt)
 					}
 				}
 
-				cin.ignore();
 				cin.getline(newYear, MAX_YEAR_LENGTH);
+				cin.clear();
 			}
 		}
 

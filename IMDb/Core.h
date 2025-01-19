@@ -1,4 +1,5 @@
 #pragma once
+#include "Movie.h";
 
 void DisplayUserActions();
 void DisplayAdminActions();
